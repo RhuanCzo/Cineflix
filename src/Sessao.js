@@ -1,5 +1,7 @@
 import styled from "styled-components"
 import calendario from "./imagens/337b27f5e055c98e5e44c0fd97cb2f42.png"
+import logo from "./imagens/672523591ef2f811a382ae5c89e262c0.png"
+import Filme1 from "./imagens/848ca605770f4105c7f94f27aefaa7cf.png"
 
 export default function Sessao () {
     return (
@@ -17,6 +19,12 @@ export default function Sessao () {
           <div>10:00</div>
         </FooterHorarios>
         </Horario>
+        <Footer>
+          <ContainerFooter>
+            <TituloFilme><img src={logo} /> <h1>Homem-Aranha: atr...</h1></TituloFilme>
+            <Imagem src={Filme1} />
+          </ContainerFooter>
+        </Footer>
         </ContainerHorarios>
 
         </>
@@ -51,10 +59,10 @@ height: 150px;
 
 hr {
   border: 0;
-  width: 300px;
-  height: 2px;
+  width: 260px;
+  height: 1px;
   background-color: #4E5A65; /* Cor da linha */
-  margin: 20px 0; /* Espaço ao redor da linha */
+  margin: 20px 0.5; /* Espaço ao redor da linha */
 
 }
 `
@@ -77,6 +85,7 @@ display: flex;
 flex-wrap: wrap;
 justify-content: center;
 align-items: center;
+padding-top: 10px;
 
 div {
   display:inline;
@@ -90,4 +99,43 @@ div {
   margin-right: 10PX;
   margin-left: 10px;
 }
+`
+
+const Footer = styled.footer `
+  position: fixed;
+  bottom: 0;
+  height: 110px;
+  width: 100%;
+  background-color: #E0877E;
+
+`
+
+const ContainerFooter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  font-size: 25px;
+  
+`
+const Imagem = styled.img`
+height: 90px;
+width: 60px;
+border-radius: 10px;
+`
+
+const TituloFilme = styled.div`
+    display: flex;
+    height: 50%;
+    width: 70%;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-around;
+  
+
+  img {
+    height: 25px;
+    width: 25px;
+  }
 `
