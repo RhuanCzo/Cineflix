@@ -1,12 +1,12 @@
 import styled from "styled-components"
 import sucesso from "./imagens/0a6cc1e49f8c713609bc475daa1a754d.png"
-import calendario from "./imagens/337b27f5e055c98e5e44c0fd97cb2f42.png"
-import logo from "./imagens/672523591ef2f811a382ae5c89e262c0.png"
-import Filme1 from "./imagens/848ca605770f4105c7f94f27aefaa7cf.png"
+import { Link } from "react-router-dom"
 
-export default function Sucesso() {
+
+export default function Sucesso({dados}) {
+const {ids, name, cpf, title, date, hours} = dados
     return (
-        <>
+        <Container>
             <Titulo><h1><img src={sucesso} />Pedido finalizado!</h1></Titulo>
             <ContainerHorarios>
                 <Horario>
@@ -16,8 +16,10 @@ export default function Sucesso() {
                     <hr className="linha-divisao"></hr>
                     <FooterHorarios>
                         <h1>
-                            Homem-Aranha: através do aranhaverso
-                            22/03/2024 às 21:00
+                            {title}
+                        </h1>
+                        <h1>
+                            {date} às {hours}
                         </h1>
                     </FooterHorarios>
                     <HeaderHorario>
@@ -25,14 +27,9 @@ export default function Sucesso() {
                     </HeaderHorario>
                     <hr className="linha-divisao"></hr>
                     <FooterHorarios>
-                        <h1>
-                            Assento 15
-
-                        </h1>
-                        <h1>
-
-                            Assento 16
-                        </h1>
+                            {ids.map ((i) => (
+                        <h1>  {i} </h1>
+                            ))}
                     </FooterHorarios>
                     <HeaderHorario>
                         <h1>Comprador(a)</h1>
@@ -40,34 +37,37 @@ export default function Sucesso() {
                     <hr className="linha-divisao"></hr>
                     <FooterHorarios>
                         <h1>
-                            Nome: João da Silva Sauro
+                            Nome: {name}
                         </h1>
                         <h1>
-                            CPF: 123.456.789-10
+                            CPF: {cpf}
                         </h1>
                     </FooterHorarios>
 
                 </Horario>
-                <button>Voltar para tela inicial</button>
+                <button><Link to={"/"} style={{textDecoration: "none", color:"#ffffff"}}>Voltar para tela inicial</Link></button>
             </ContainerHorarios>
-        </>
+        </Container>
 
     )
 }
-
+const Container = styled.h1`
+min-height: 100dvh;
+background-color: #293845;
+`
 const Titulo = styled.div`
   color: #9DB899;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 20px;
+  font-size: 30px;
 
   img {
     height: 25px;
     width: 25px;
   }
 `
-
 const ContainerHorarios = styled.div`
 height: 100dvh;
 width: 100%;
@@ -89,7 +89,6 @@ button {
     margin: 10px 0;
 }
 `
-
 const Horario = styled.div`
 color: #ffffff;
 background-color: #2B2D36;
@@ -111,7 +110,6 @@ hr {
 
 }
 `
-
 const HeaderHorario = styled.div`
 padding-top: 15px;
 display: flex;
@@ -126,7 +124,6 @@ img {
   width: 30px;
 }
 `
-
 const FooterHorarios = styled.div`
 display: flex;
 flex-wrap: wrap;
@@ -149,43 +146,4 @@ div {
   margin-right: 10PX;
   margin-left: 10px;
 }
-`
-
-const Footer = styled.footer`
-  position: fixed;
-  bottom: 0;
-  height: 110px;
-  width: 100%;
-  background-color: #E0877E;
-
-`
-
-const ContainerFooter = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  font-size: 25px;
-  
-`
-const Imagem = styled.img`
-height: 90px;
-width: 60px;
-border-radius: 10px;
-`
-
-const TituloFilme = styled.div`
-    display: flex;
-    height: 50%;
-    width: 70%;
-    justify-content: center;
-    align-items: center;
-    justify-content: space-around;
-  
-
-  img {
-    height: 25px;
-    width: 25px;
-  }
 `

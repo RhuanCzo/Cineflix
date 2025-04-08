@@ -3,88 +3,138 @@ import logo from "./imagens/672523591ef2f811a382ae5c89e262c0.png"
 import calendario from "./imagens/7ddd221074669a076b6971daa4476571.png"
 import Filme1 from "./imagens/848ca605770f4105c7f94f27aefaa7cf.png"
 import indisponivel from "./imagens/63126d2bb26ea557bc0ef7cf226ea586.png"
+import axios from "axios"
+import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import Assento from "./Assento"
+import { useNavigate } from "react-router-dom"
 
 
-export default function Assentos () {
-    return (
-        <>
-        <Titulo><h1>Selecione o(s) assento(s)</h1></Titulo>
-        <ContainerAssentos>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <Assento></Assento>
-            <hr className="linha-divisao"></hr>
+
+export default function Assentos({setDados}) {
+  const { idSessao } = useParams()
+  const [assentos, setAssentos] = useState(undefined)
+  const [selecionados, setSelecionados] = useState ([])
+  const [name, setName] = useState("")
+  const [cpf, setCpf] = useState("")
+  const navigate = useNavigate()
+  
+
+  useEffect(() => {
+    const promisse = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSessao}/seats`)
+    promisse.then((res) => {
+      setAssentos(res.data)
+    })
+    promisse.catch ((error) => {
+      console.log(error.data)
+    })
+
+  }, [])
+
+  if (!assentos) {
+    return ("carregando")
+  }
+
+  function handleSeats (assento) {
+    if (assento.isAvailable === false) {
+      alert("assentos indisponivel")
+    } else {
+      const isSelected = selecionados.some(s => assento.id === s.id)
+      if(isSelected) {
+        const newArray = selecionados.filter(s => assento.id !== s.id)
+        setSelecionados (newArray)
+      } else {
+        setSelecionados ([...selecionados, assento])
+      }
+    }
+  }
+  
+  const dados = {
+    ids: selecionados.map(a => a.name),
+    name: name,
+    cpf: cpf,
+    title: assentos.movie.title,
+    date: assentos.day.date,
+    weekday: assentos.day.weekday,
+    hours: assentos.name
+  }
+  function enviarDados (event) {
+    event.preventDefault();
+    navigate ("/sucesso")
+    setDados(dados)
+  }
+
+
+
+
+  return (
+    <Container>
+      <Titulo>Selecione o(s) assento(s)</Titulo>
+      <ContainerAssentos>
+        {assentos.seats.map(assento => (
+          <Assento
+            key={assento.id}
+            assento={assento}
+            handleSeats={handleSeats}
+            isSelected={selecionados.some(s => assento.id === s.id)}
+            />
+            
+          ))}
+
+        <hr className="linha-divisao"></hr>
         <Legend>
-            <AssentoSelecionado></AssentoSelecionado>
-            <Assento></Assento>
-            <AssentoIndisponivel><img src={indisponivel} alt="sim"/></AssentoIndisponivel>
+          <div>
+          <AssentoSelecionado></AssentoSelecionado>
+          Selecionado
+          </div>
+          <div>
+          <Assento1></Assento1>
+          Disponivel
+          </div>
+          <div>
+          <AssentoIndisponivel><img src={indisponivel} alt="sim" /></AssentoIndisponivel>
+          indisponivel
+          </div>
         </Legend>
-        </ContainerAssentos>
-        <Informacoes>
-            Nome do comprador(a)
-            <input  type="text" placeholder="Digite seu nome..."></input>
+      </ContainerAssentos>
+      <form onSubmit={enviarDados} action="" method="get" className="form">
 
-            CPF do comprador(a)
-            <input  type="text" placeholder="Digite seu cpf..."></input>
+      <Informacoes>
+        <label style={{color:"#FFFFFF"}}>Nome do comprador(a)</label>
+        <input value={name} required type="text" placeholder="Digite seu nome..." onChange={e => setName(e.target.value)}></input>
 
-            <button>Reservar Assento(s)</button>
-        </Informacoes>
-        <Footer>
-          <ContainerFooter>
-            <Resumo>
-            <TituloFilme><img src={logo} alt="oi"/> <h1>Homem-Aranha: atr...</h1></TituloFilme>
-            <TituloFilme><img src={calendario} alt="sim" /> <h1>  22/03/2024 às 21:00</h1></TituloFilme>
-            </Resumo>
-            <Imagem src={Filme1} />
-          </ContainerFooter>
-        </Footer>
-        </>
-    )
+        <label style={{color:"#FFFFFF"}}>CPF do comprador(a)</label>
+        <input value={cpf} required type="text" placeholder="Digite seu CPF..." onChange={e => setCpf(e.target.value)}></input>
+
+        <button type="submit" >Reservar Assento(s)</button>
+      </Informacoes>
+      </form>
+      <Footer>
+        <ContainerFooter>
+          <Resumo>
+            <TituloFilme><img src={logo} alt="oi" /> <h1>{assentos.movie.title}</h1></TituloFilme>
+            <TituloFilme><img src={calendario} alt="sim" /> <h1>{assentos.day.date} às {assentos.name}</h1></TituloFilme>
+          </Resumo>
+          <Imagem src={assentos.movie.posterURL} />
+        </ContainerFooter>
+      </Footer>
+    </Container>
+  )
 }
 
-const Titulo = styled.div `
+const Container = styled.h1`
+min-height: 100dvh;
+background-color: #293845;
+margin-bottom:100px;
+`
+
+const Titulo = styled.div`
   color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 20px;
+  font-size: 30px;
 `
 
 const ContainerAssentos = styled.div`
@@ -106,15 +156,6 @@ hr {
 }
 `
 
-const Assento = styled.div`
-border: 1px solid;
-height: 25px;
-width: 25px;
-background-color: #9DB899; 
-border-radius: 25px;
-margin: 5px 3px;
-font-size: 15px;
-`
 const AssentoSelecionado = styled.div`
 border: 1px solid;
 height: 25px;
@@ -136,6 +177,16 @@ img {
     height: 25px;
     width: 25px;
 }
+`
+
+const Assento1 = styled.div`
+border: 1px solid;
+height: 25px;
+width: 25px;
+background-color: #9DB899; 
+border-radius: 25px;
+margin: 5px 3px;
+font-size: 15px;
 `
 
 const Legend = styled.div`
@@ -188,7 +239,7 @@ const ContainerFooter = styled.div`
   align-items: center;
   height: 100%;
   width: 100%;
-  font-size: 25px;
+  font-size: 23px;
   
 `
 const Imagem = styled.img`
@@ -211,6 +262,7 @@ const TituloFilme = styled.div`
     align-items: center;
     justify-content: space-around;
     padding-top: 5px;
+    padding-right: 5px;
 
   img {
     height: 25px;
@@ -218,7 +270,7 @@ const TituloFilme = styled.div`
     padding-right:2px;
   }
 `
-const Footer = styled.footer `
+const Footer = styled.footer`
   position: fixed;
   bottom: 0;
   height: 110px;
